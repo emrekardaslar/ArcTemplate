@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using ArcTemplate.Core.Interfaces;
+using MediatR;
 using ArcTemplate.Application.UseCases.GetCustomer;
+using System.Threading.Tasks;
 
 namespace ArcTemplate.WebApi.Controllers
 {
@@ -8,19 +9,18 @@ namespace ArcTemplate.WebApi.Controllers
     [Route("api/[controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IMediator _mediator;
 
-        public CustomerController(ICustomerRepository customerRepository)
+        public CustomerController(IMediator mediator)
         {
-            _customerRepository = customerRepository;
+            _mediator = mediator;
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCustomer(int id)
+        public async Task<IActionResult> GetCustomer(int id)
         {
-            var handler = new GetCustomerHandler(_customerRepository);
             var request = new GetCustomerRequest { Id = id };
-            var response = handler.Handle(request);
+            var response = await _mediator.Send(request);
             return Ok(response);
         }
     }

@@ -1,8 +1,11 @@
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using ArcTemplate.Core.Interfaces;
 
 namespace ArcTemplate.Application.UseCases.GetCustomer
 {
-    public class GetCustomerHandler
+    public class GetCustomerHandler : IRequestHandler<GetCustomerRequest, GetCustomerResponse>
     {
         private readonly ICustomerRepository _customerRepository;
 
@@ -11,10 +14,10 @@ namespace ArcTemplate.Application.UseCases.GetCustomer
             _customerRepository = customerRepository;
         }
 
-        public GetCustomerResponse Handle(GetCustomerRequest request)
+        public Task<GetCustomerResponse> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
             var customer = _customerRepository.GetCustomerById(request.Id);
-            return new GetCustomerResponse { Id = customer.Id, Name = customer.Name };
+            return Task.FromResult(new GetCustomerResponse { Id = customer.Id, Name = customer.Name });
         }
     }
 }

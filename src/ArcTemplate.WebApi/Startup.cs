@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using ArcTemplate.Core.Interfaces;
 using ArcTemplate.Infrastructure.Data;
-using Microsoft.OpenApi.Models;
-
+using MediatR;
+using System.Reflection;
 
 namespace ArcTemplate.WebApi
 {
@@ -23,6 +24,9 @@ namespace ArcTemplate.WebApi
         {
             services.AddControllers();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            // Add MediatR services
+            services.AddMediatR(typeof(ArcTemplate.Application.UseCases.GetCustomer.GetCustomerHandler).GetTypeInfo().Assembly);
 
             // Add Swagger services
             services.AddSwaggerGen(c =>
@@ -49,7 +53,7 @@ namespace ArcTemplate.WebApi
                 endpoints.MapControllers();
             });
 
-             // Enable middleware to serve generated Swagger as a JSON endpoint
+            // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger();
 
             // Enable middleware to serve Swagger UI
