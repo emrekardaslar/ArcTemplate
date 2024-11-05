@@ -16,6 +16,12 @@ namespace ArcTemplate.Application.UseCases.GetCustomer
         public Task<CustomerDTO> Handle(GetCustomerQuery query, CancellationToken cancellationToken)
         {
             var customer = _customerRepository.GetCustomerById(query.Id);
+            
+            if (customer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {query.Id} was not found.");
+            }
+            
             return Task.FromResult(new CustomerDTO { Id = customer.Id, Name = customer.Name });
         }
     }
