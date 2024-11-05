@@ -1,9 +1,10 @@
+using ArcTemplate.Application.DTOs;
 using MediatR;
 using ArcTemplate.Core.Interfaces;
 
 namespace ArcTemplate.Application.UseCases.GetProduct
 {
-    public class GetProductHandler : IRequestHandler<GetProductQuery, GetProductResponse>
+    public class GetProductHandler : IRequestHandler<GetProductQuery, ProductDTO>
     {
         private readonly IProductRepository _productRepository;
 
@@ -12,10 +13,10 @@ namespace ArcTemplate.Application.UseCases.GetProduct
             _productRepository = productRepository;
         }
 
-        public Task<GetProductResponse> Handle(GetProductQuery query, CancellationToken cancellationToken)
+        public Task<ProductDTO> Handle(GetProductQuery query, CancellationToken cancellationToken)
         {
             var product = _productRepository.GetProductById(query.Id);
-            return Task.FromResult(new GetProductResponse { Id = product.Id, Name = product.Name, Price = product.Price });
+            return Task.FromResult(new ProductDTO { Id = product.Id, Name = product.Name, Price = product.Price });
         }
     }
 }
