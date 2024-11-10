@@ -19,7 +19,7 @@ namespace ArcTemplate.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct(int id)
         {
-            var request = new GetProductRequest { Id = id };
+            var request = new GetProductQuery { Id = id };
             var response = await _mediator.Send(request);
             return Ok(response);
         }
